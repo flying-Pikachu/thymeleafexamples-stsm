@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -32,8 +33,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring4.view.ThymeleafView;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import thymeleafexamples.stsm.business.services.UserConversionService;
 import thymeleafexamples.stsm.web.conversion.DateFormatter;
 import thymeleafexamples.stsm.web.conversion.VarietyFormatter;
 
@@ -51,6 +54,7 @@ public class SpringWebConfig
     }
 
 
+    @Override
     public void setApplicationContext(final ApplicationContext applicationContext)
             throws BeansException {
         this.applicationContext = applicationContext;
@@ -93,6 +97,7 @@ public class SpringWebConfig
         super.addFormatters(registry);
         registry.addFormatter(varietyFormatter());
         registry.addFormatter(dateFormatter());
+        registry.addConverter(new UserConversionService());
     }
 
     @Bean
@@ -150,4 +155,12 @@ public class SpringWebConfig
         return viewResolver;
     }
 
+    @Bean(name="content-part")
+    @Scope("prototype")
+    public ThymeleafView someViewBean() {
+        // templateName = 'index'
+        ThymeleafView view = new ThymeleafView("index");
+        view.setMarkupSelector("content");
+        return view;
+    }
 }

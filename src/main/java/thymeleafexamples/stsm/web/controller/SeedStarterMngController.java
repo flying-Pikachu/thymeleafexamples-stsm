@@ -114,5 +114,10 @@ public class SeedStarterMngController {
         return "seedstartermng";
     }
 
+    @RequestMapping("/showContentPart") public String showContentPart() {
+
+        return "content-part";
+    }
+
 
 }
